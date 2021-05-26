@@ -59,6 +59,12 @@ def completedtodos(request):
     return render(request, 'todo/completedtodos.html', {'todos':todos})
 
 @login_required
+def alltodos(request):
+    completedtodos = Todo.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
+    currenttodos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    return render(request, 'todo/alltodos.html', {'completedtodos':completedtodos, 'currenttodos':currenttodos})
+
+@login_required
 def createtodo(request):
     if request.method == 'GET':
         return render(request, 'todo/createtodo.html', {'form':TodoForm()})
